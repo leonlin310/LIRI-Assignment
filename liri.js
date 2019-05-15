@@ -1,23 +1,20 @@
 require("dotenv").config();
 const keys = require("./keys.js");
-// var axios = require("axios");
+const axios = require("axios");
 
 const Spotify = require('node-spotify-api');
 const spotify = new Spotify(keys.spotify);
 const command = process.argv[2];
 
-// node liri.js spotify-this-song '<song name here>'
-// This will show the following information about the song in your terminal/bash window
-// Artist(s)
-// The song's name
-// A preview link of the song from Spotify
-// The album that the song is from
-// If no song is provided then your program will default to "The Sign" by Ace of Base.
 
 if (command == 'spotify-this-song') {
-
     spotifySearch();
-
+}
+else if (command == "concert-this") {
+    concertThis();
+}
+else if (command == "movie-this") {
+    movieThis();
 }
 
 
@@ -53,4 +50,33 @@ function spotifySearch() {
         .catch(function (err) {
             console.log("error", err)
         })
+}
+
+function concertThis() {
+    let artist = process.argv[3];
+  
+    axios.get("https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp")
+        .then(
+            function (response) {
+                // Then we print out the imdbRating
+                //   console.log(response.data[0]);
+                for (i = 0; i < 3; i++) {
+                    console.log("========================================================================================================================================================")
+                    console.log("Venue Name: ", response.data[i].venue.name)
+                    console.log("Venue Location: ", `${response.data[i].venue.city}, ${response.data[0].venue.country}`)
+                    //TODO: Need to use MOMENT.JS to format this section!!
+                    console.log("Date of the Event: ", response.data[i].datetime)
+                    console.log("========================================================================================================================================================")
+                }
+            }
+        )
+        .catch(function (err) {
+            if (artist === undefined){
+                console.log("You did not enter an artist")
+            }
+        })
+}
+
+function movieThis(){
+
 }
