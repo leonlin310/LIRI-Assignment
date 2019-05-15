@@ -78,5 +78,33 @@ function concertThis() {
 }
 
 function movieThis(){
+    let movie = process.argv[3];
+    if (movie === undefined) {
+        movie = 'Mr. Nobody'
+    } else {
+        movie = movie
+    }
+    // var queryURL = "https://www.omdbapi.com/?t=" + movie + "&apikey=trilogy";
 
+
+    axios.get(`http://www.omdbapi.com/?t=${movie}&apikey=trilogy`)
+        .then(
+                function(response){
+                    console.log(response.data);
+                    let mResult = response.data
+                    console.log("========================================================================================================================================================")
+                    console.log("Movie Title: ", mResult.Title);
+                    console.log("Year: ", mResult.Year);
+                    console.log("IMDB Rating: ", mResult.imdbRating);
+                    console.log("Rotten Tomatoes Rating: ", mResult.Ratings[1].Value);
+                    console.log("Country Produced: ", mResult.Country);
+                    console.log("Language of the Movie: ", mResult.Language);
+                    console.log("Plot: ", mResult.Plot);
+                    console.log("Actors: ", mResult.Actors);
+                    console.log("========================================================================================================================================================")
+                }
+        )
+        .catch(function (err) {
+            console.log("error", err)
+        })
 }
