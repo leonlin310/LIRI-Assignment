@@ -17,6 +17,9 @@ else if (command == "movie-this") {
     movieThis();
 }
 
+else if (command == "do-what-it-says"){
+    doWhatItSays();
+}
 
 
 
@@ -90,7 +93,7 @@ function movieThis(){
     axios.get(`http://www.omdbapi.com/?t=${movie}&apikey=trilogy`)
         .then(
                 function(response){
-                    console.log(response.data);
+                    // console.log(response.data);
                     let mResult = response.data
                     console.log("========================================================================================================================================================")
                     console.log("Movie Title: ", mResult.Title);
@@ -108,3 +111,42 @@ function movieThis(){
             console.log("error", err)
         })
 }
+
+function doWhatItSays(){
+    // spotify-this-song,"I Want it That Way"
+    fs = require("fs");
+    fs.readFile("random.txt", "utf8", function(error, data) {
+
+
+        if (error) {
+          return console.log(error);
+        }
+
+    //This will split the data and put it into its own array
+        var dataArr = data.split(",");
+        let song = dataArr[1]
+
+    //Copied function from earlier. Find a way to pass it in !    
+        spotify
+        .search({ type: 'track', query: song })
+        .then(function (data) {
+            // for (let i = 0; i < 3; i++) {
+            console.log("========================================================================================================================================================")
+            console.log("The bands name is: ", data.tracks.items[0].artists[0].name);
+            console.log("The songs name is: ", data.tracks.items[0].name);
+            let nuller = JSON.stringify(data.tracks.items[0].preview_url)
+            if (nuller === "null") {
+                console.log("Click here for a preview of the song: Sorry, but there is no preview available")
+                console.log("========================================================================================================================================================")
+            }
+            else {
+                console.log("Click here for a preview of the song:", data.tracks.items[0].preview_url)
+                console.log("========================================================================================================================================================")
+            }
+        })
+        .catch(function (err) {
+            console.log("error", err)
+        })
+      });
+}
+
