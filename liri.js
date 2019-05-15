@@ -13,37 +13,44 @@ const command = process.argv[2];
 // A preview link of the song from Spotify
 // The album that the song is from
 // If no song is provided then your program will default to "The Sign" by Ace of Base.
- 
-if (command == 'spotify-this-song'){
-    let spotifyResult = process.argv[3];
-        console.log("*********************************************************************************")
-        console.log("Here are the search results for song:", spotifyResult);
-        console.log("*********************************************************************************")
 
-    for (let i = 0; i<3; i++){
+if (command == 'spotify-this-song') {
 
-    spotify.search({ type: 'track', query: spotifyResult}, function(err, data) {
-        if (err) {
-          return console.log('Error occurred: ' + err);
-        }
-    //   console.log(data.tracks.items[0]);
-        //TODO: Artist
-        console.log("=================================================================================")
-        console.log("The bands name is: ",data.tracks.items[i].artists[0].name);
-        console.log("The songs name is: ",data.tracks.items[i].name);
-        let nuller = JSON.stringify(data.tracks.items[i].preview_url)
-        if (nuller === "null"){
-            console.log("Click here for a preview of the song: Sorry, but there is no preview available")
+    spotifySearch();
 
-        }
-        else {
-        console.log("Click here for a preview of the song:", data.tracks.items[i].preview_url)
-        }
-      });
-    }
 }
 
 
 
 
-//TODO: working spotify.search
+function spotifySearch() {
+    //Argument to have Ace of Base play if undefined
+    let spotifyResult = process.argv[3];
+    if (spotifyResult === undefined) {
+        song = 'The Sign by Ace of Base'
+    } else {
+        song = spotifyResult
+    }
+
+    //Spotify query
+    spotify
+        .search({ type: 'track', query: song })
+        .then(function (data) {
+            // for (let i = 0; i < 3; i++) {
+            console.log("========================================================================================================================================================")
+            console.log("The bands name is: ", data.tracks.items[0].artists[0].name);
+            console.log("The songs name is: ", data.tracks.items[0].name);
+            let nuller = JSON.stringify(data.tracks.items[0].preview_url)
+            if (nuller === "null") {
+                console.log("Click here for a preview of the song: Sorry, but there is no preview available")
+                console.log("========================================================================================================================================================")
+            }
+            else {
+                console.log("Click here for a preview of the song:", data.tracks.items[0].preview_url)
+                console.log("========================================================================================================================================================")
+            }
+        })
+        .catch(function (err) {
+            console.log("error", err)
+        })
+}
